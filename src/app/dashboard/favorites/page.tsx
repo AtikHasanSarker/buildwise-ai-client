@@ -2,8 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Heart, ExternalLink } from "lucide-react";
-import { Card, Skeleton } from "@/components/ui";
+import Link from "next/link";
+import Image from "next/image";
+import { Heart, Package } from "lucide-react";
+import { Card, Button, Skeleton } from "@/components/ui";
 import apiClient from "@/lib/api-client";
 
 interface Product {
@@ -66,9 +68,17 @@ export default function FavoritesPage() {
           <h2 className="text-lg font-semibold text-text-primary mb-2">
             No favorites yet
           </h2>
-          <p className="text-sm text-text-secondary max-w-sm">
+          <p className="text-sm text-text-secondary max-w-sm mb-4">
             Browse products and tap the heart icon to add items to your favorites.
           </p>
+          <Link href="/products">
+            <Button
+              variant="secondary"
+              icon={<Package className="w-4 h-4" />}
+            >
+              Browse Products
+            </Button>
+          </Link>
         </motion.div>
       ) : (
         <motion.div
@@ -79,11 +89,15 @@ export default function FavoritesPage() {
           {products.map((product) => (
             <Card key={product._id} padding="none" className="overflow-hidden">
               {product.image && (
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-40 object-cover"
-                />
+                <div className="relative w-full h-40">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
               )}
               <div className="p-4">
                 <p className="text-xs text-text-secondary">{product.brand}</p>
@@ -94,12 +108,12 @@ export default function FavoritesPage() {
                   <span className="text-base font-bold font-mono text-text-primary">
                     ${product.price.toLocaleString()}
                   </span>
-                  <a
+                  <Link
                     href={`/products/${product._id}`}
-                    className="text-xs text-primary hover:underline flex items-center gap-1"
+                    className="text-xs text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
                   >
-                    View <ExternalLink className="w-3 h-3" />
-                  </a>
+                    View details
+                  </Link>
                 </div>
               </div>
             </Card>

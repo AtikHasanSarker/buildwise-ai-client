@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Bot } from "lucide-react";
+import { Bot, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui";
 
 export default function AIHistoryPage() {
   return (
@@ -16,12 +18,20 @@ export default function AIHistoryPage() {
           <Bot className="w-10 h-10 text-text-secondary" />
         </div>
         <h2 className="text-lg font-semibold text-text-primary mb-2">
-          AI History coming soon
+          No AI conversations yet
         </h2>
-        <p className="text-sm text-text-secondary max-w-sm">
-          Your AI build conversations and recommendations will appear here once
-          the AI module is fully integrated.
+        <p className="text-sm text-text-secondary max-w-sm mb-6">
+          Start a conversation with the AI assistant to get build
+          recommendations, compatibility checks, and component suggestions.
         </p>
+        <Link href="/ai/build">
+          <Button
+            icon={<Sparkles className="w-4 h-4" />}
+            className="focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+          >
+            Try AI Build Generator
+          </Button>
+        </Link>
       </motion.div>
     </div>
   );

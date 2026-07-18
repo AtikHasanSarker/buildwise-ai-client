@@ -17,11 +17,11 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "size"> {
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    "bg-primary text-white shadow-soft hover:shadow-glow-primary hover:bg-primary-hover",
+    "bg-primary text-white shadow-soft hover:shadow-glow-primary hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2",
   secondary:
-    "bg-transparent border border-border text-text-primary hover:bg-surface-2",
+    "bg-transparent border border-border text-text-primary hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2",
   ghost:
-    "bg-transparent text-text-primary hover:underline underline-offset-4",
+    "bg-transparent text-text-primary hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2",
 };
 
 const sizeStyles: Record<Size, string> = {

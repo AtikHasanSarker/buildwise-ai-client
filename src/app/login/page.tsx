@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
@@ -9,6 +9,10 @@ import { useToast } from "@/components/ui/toast";
 
 export default function LoginPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    document.title = "Login — BuildWise AI";
+  }, []);
   const { login } = useAuth();
   const { showToast } = useToast();
 
@@ -79,7 +83,7 @@ export default function LoginPage() {
               </label>
               <Link
                 href="/forgot-password"
-                className="text-xs text-primary hover:underline"
+                className="text-xs text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
               >
                 Forgot password?
               </Link>
@@ -116,7 +120,7 @@ export default function LoginPage() {
         <Button
           type="button"
           variant="secondary"
-          className="w-full"
+          className="w-full focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           icon={
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path

@@ -539,7 +539,8 @@ export default function AdminDashboardPage() {
                               user.role === "admin" ? "user" : "admin"
                             );
                           }}
-                          className="cursor-pointer"
+                          className="cursor-pointer focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
+                          aria-label={`Change role for ${user.name}`}
                         >
                           <Badge
                             variant={
@@ -562,7 +563,8 @@ export default function AdminDashboardPage() {
                       <td className="py-3 text-right">
                         <button
                           onClick={() => setDeleteUser(user)}
-                          className="p-1.5 rounded-lg hover:bg-error/10 text-text-secondary hover:text-error transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-error/10 text-text-secondary hover:text-error transition-colors focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-2"
+                          aria-label={`Delete user ${user.name}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -666,7 +668,8 @@ export default function AdminDashboardPage() {
         <div className="flex gap-3 mb-6">
           <button
             onClick={() => setNewRole("user")}
-            className={`flex-1 p-3 rounded-xl border-2 text-sm font-medium text-center transition-all ${
+            aria-pressed={newRole === "user"}
+            className={`flex-1 p-3 rounded-xl border-2 text-sm font-medium text-center transition-all focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 ${
               newRole === "user"
                 ? "border-primary bg-primary/10 text-primary"
                 : "border-border hover:border-text-secondary/40 text-text-secondary"
@@ -676,7 +679,8 @@ export default function AdminDashboardPage() {
           </button>
           <button
             onClick={() => setNewRole("admin")}
-            className={`flex-1 p-3 rounded-xl border-2 text-sm font-medium text-center transition-all ${
+            aria-pressed={newRole === "admin"}
+            className={`flex-1 p-3 rounded-xl border-2 text-sm font-medium text-center transition-all focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 ${
               newRole === "admin"
                 ? "border-primary bg-primary/10 text-primary"
                 : "border-border hover:border-text-secondary/40 text-text-secondary"

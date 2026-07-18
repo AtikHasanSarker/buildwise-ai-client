@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/components/ui/toast";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const { user, isLoading, logout } = useAuth();
@@ -13,7 +14,16 @@ export default function Navbar() {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 10);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -24,8 +34,18 @@ export default function Navbar() {
         setDropdownOpen(false);
       }
     }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setDropdownOpen(false);
+        setMobileOpen(false);
+      }
+    }
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
   }, []);
 
   async function handleLogout() {
@@ -40,7 +60,13 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-md bg-surface/80 border-b border-border">
+    <nav
+      className={`sticky top-0 z-50 backdrop-blur-md border-b transition-all duration-200 ${
+        scrolled
+          ? "bg-surface/95 shadow-soft border-border/80"
+          : "bg-surface/80 border-border"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="text-lg font-bold text-text-primary">
@@ -51,33 +77,34 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-6">
           <Link
             href="/products"
-            className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+            className="text-sm text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
           >
             Products
           </Link>
           <Link
             href="/builds"
-            className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+            className="text-sm text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
           >
             Builds
           </Link>
           <Link
             href="/ai"
-            className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+            className="text-sm text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
           >
             AI Assistant
           </Link>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           {isLoading ? (
             <div className="w-8 h-8 rounded-full bg-surface-2 animate-pulse" />
           ) : user ? (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 rounded-full border border-border px-2 py-1 hover:bg-surface-2 transition-colors"
+                className="flex items-center gap-2 rounded-full border border-border px-2 py-1 hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
                 {user.avatar ? (
                   <img
@@ -101,7 +128,7 @@ export default function Navbar() {
                   <Link
                     href="/dashboard"
                     onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-surface-2 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                   >
                     <LayoutDashboard className="w-4 h-4" />
                     Dashboard
@@ -109,7 +136,7 @@ export default function Navbar() {
                   <Link
                     href="/profile"
                     onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-surface-2 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                   >
                     <User className="w-4 h-4" />
                     Profile
@@ -117,7 +144,7 @@ export default function Navbar() {
                   <div className="h-px bg-border my-1" />
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-error hover:bg-surface-2 transition-colors w-full"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-error hover:bg-surface-2 transition-colors w-full focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-2"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -129,13 +156,13 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <Link
                 href="/login"
-                className="rounded-full border border-border bg-surface px-5 py-2 text-sm font-medium text-text-primary transition-all hover:bg-surface-2"
+                className="rounded-full border border-border bg-surface px-5 py-2 text-sm font-medium text-text-primary transition-all hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-soft transition-all hover:bg-primary-hover hover:shadow-glow-primary"
+                className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-soft transition-all hover:bg-primary-hover hover:shadow-glow-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
                 Register
               </Link>
@@ -145,7 +172,8 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden text-text-primary p-1"
+            className="md:hidden text-text-primary p-1 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

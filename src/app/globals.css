@@ -128,3 +128,88 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
+
+/* ─── Scrollbar hide utility ─── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Tech background: gradient mesh blobs + circuit grid ─── */
+
+/* Light mode: soft pastel blobs */
+.tech-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.tech-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 15% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 700px 500px at 85% 15%, rgba(124, 58, 237, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 50% 80%, rgba(37, 99, 235, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 400px at 80% 70%, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+  filter: blur(80px);
+}
+
+.tech-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image:
+    linear-gradient(var(--color-primary) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-primary) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Dark mode: stronger, more vibrant blobs */
+.dark .tech-bg::before {
+  background:
+    radial-gradient(ellipse 900px 650px at 10% 15%, rgba(37, 99, 235, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 800px 550px at 88% 10%, rgba(124, 58, 237, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 700px 500px at 50% 85%, rgba(37, 99, 235, 0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 450px at 75% 65%, rgba(124, 58, 237, 0.10) 0%, transparent 70%);
+  filter: blur(120px);
+}
+
+.dark .tech-bg::after {
+  opacity: 0.04;
+}
+
+/* ─── Floating card animations ─── */
+@keyframes hero-float-1 {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-12px) rotate(-4deg); }
+}
+@keyframes hero-float-2 {
+  0%, 100% { transform: translateY(0) rotate(3deg); }
+  50% { transform: translateY(-16px) rotate(3deg); }
+}
+@keyframes hero-float-3 {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(-2deg); }
+}
+@keyframes hero-float-4 {
+  0%, 100% { transform: translateY(0) rotate(5deg); }
+  50% { transform: translateY(-14px) rotate(5deg); }
+}
+
+/* ─── Scroll indicator bounce ─── */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+.scroll-indicator {
+  animation: scroll-bounce 2s ease-in-out infinite;
+}

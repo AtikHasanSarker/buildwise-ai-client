@@ -33,6 +33,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           setFocused(false);
           rest.onBlur?.(e);
         }}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${inputId}-error` : undefined}
         className={`
           w-full rounded-lg border bg-surface-2 px-3 py-2.5
           text-sm text-text-primary outline-none
@@ -40,16 +42,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           placeholder:text-text-secondary/60
           ${
             error
-              ? "border-error focus:border-error focus:ring-1 focus:ring-error/30"
+              ? "border-error focus:border-error focus:ring-1 focus:ring-error/30 focus-visible:ring-error/30"
               : focused
               ? "border-primary ring-1 ring-primary/20"
-              : "border-border hover:border-text-secondary/40"
+              : "border-border hover:border-text-secondary/40 focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary/20"
           }
           ${className}
         `}
         {...rest}
       />
-      {error && <p className="text-xs text-error">{error}</p>}
+      {error && (
+        <p id={`${inputId}-error`} className="text-xs text-error" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 });

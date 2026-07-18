@@ -17,7 +17,11 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card hover padding="none" className="overflow-hidden group">
       {/* Image */}
-      <Link href={`/products/${product.id}`} className="block relative aspect-square">
+      <Link
+        href={`/products/${product.id}`}
+        className="block relative aspect-square focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px] rounded-t-xl"
+        aria-label={`View ${product.name}`}
+      >
         {!imgLoaded && (
           <Skeleton className="absolute inset-0 rounded-none" />
         )}
@@ -47,7 +51,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Content */}
       <div className="p-4 flex flex-col gap-2">
-        <Link href={`/products/${product.id}`}>
+        <Link
+          href={`/products/${product.id}`}
+          className="focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
+        >
           <h3 className="text-sm font-semibold text-text-primary line-clamp-2 leading-snug">
             {product.name}
           </h3>
@@ -83,6 +90,7 @@ export function ProductCard({ product }: ProductCardProps) {
               product.stock > 0 ? "bg-success" : "bg-error"
             }`}
             title={product.stock > 0 ? "In stock" : "Out of stock"}
+            aria-label={product.stock > 0 ? "In stock" : "Out of stock"}
           />
         </div>
 
@@ -90,13 +98,13 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex gap-2 pt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
           <Link
             href={`/products/${product.id}`}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-transparent px-4 py-2 text-xs font-medium text-text-primary hover:bg-surface-2 transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-transparent px-4 py-2 text-xs font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             <Eye className="w-3.5 h-3.5" />
             View Details
           </Link>
           <button
-            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-soft hover:bg-primary-hover hover:shadow-glow-primary transition-all disabled:opacity-50"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-soft hover:bg-primary-hover hover:shadow-glow-primary transition-all disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
             disabled={product.stock === 0}
           >
             <ShoppingCart className="w-3.5 h-3.5" />

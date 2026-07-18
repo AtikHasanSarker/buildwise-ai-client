@@ -196,7 +196,16 @@ function ProductSearch({
           setIsOpen(true);
           inputRef.current?.focus();
         }}
-        className="rounded-xl border border-border bg-surface-2 p-3 flex items-center gap-3 cursor-pointer hover:border-text-secondary/40 transition-colors"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setIsOpen(true);
+            inputRef.current?.focus();
+          }
+        }}
+        className="rounded-xl border border-border bg-surface-2 p-3 flex items-center gap-3 cursor-pointer hover:border-text-secondary/40 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       >
         <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0">
           <Icon className="w-5 h-5 text-text-secondary" />
@@ -501,7 +510,8 @@ function IssueCard({
     <Card hover={false} padding="none" className="overflow-hidden border border-error/30">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-3 p-4 text-left hover:bg-surface-2/50 transition-colors"
+        aria-expanded={expanded}
+        className="w-full flex items-center gap-3 p-4 text-left hover:bg-surface-2/50 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px]"
       >
         <div className="w-8 h-8 rounded-lg bg-error/10 flex items-center justify-center shrink-0">
           <AlertTriangle className="w-4 h-4 text-error" />
@@ -580,7 +590,8 @@ function IssueCard({
                         <button
                           key={alt.id}
                           onClick={() => onSwapAlternative(alt)}
-                          className="flex-shrink-0 w-48 rounded-lg border border-border bg-surface p-3 text-left hover:border-primary hover:shadow-soft transition-all group"
+                          aria-label={`Use ${alt.name} as alternative`}
+                          className="flex-shrink-0 w-48 rounded-lg border border-border bg-surface p-3 text-left hover:border-primary hover:shadow-soft transition-all group focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                         >
                           <div className="w-full aspect-square rounded-lg bg-surface-2 mb-2 overflow-hidden">
                             {alt.images[0] ? (
@@ -659,6 +670,10 @@ function CheckingSkeleton() {
    ────────────────────────────────────────────── */
 
 function CompatibilityContent() {
+  useEffect(() => {
+    document.title = "Compatibility Checker — BuildWise AI";
+  }, []);
+
   const searchParams = useSearchParams();
   const { showToast } = useToast();
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import {
   Calendar,
   Cpu,
@@ -264,7 +265,8 @@ export default function SavedBuildsPage() {
               <div className="flex border-t border-border">
                 <button
                   onClick={() => openDetail(build)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-text-primary hover:bg-surface-2 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px]"
+                  aria-label={`View details for ${build.name}`}
                 >
                   <Eye className="w-4 h-4" />
                   View Details
@@ -272,7 +274,8 @@ export default function SavedBuildsPage() {
                 <div className="w-px bg-border" />
                 <button
                   onClick={() => openConfirm(build)}
-                  className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-error hover:bg-error/5 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-error hover:bg-error/5 transition-colors focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-[-2px]"
+                  aria-label={`Delete ${build.name}`}
                 >
                   <Trash2 className="w-4 h-4" />
                   Delete
@@ -308,11 +311,15 @@ export default function SavedBuildsPage() {
                   className="flex items-center gap-3 p-3 rounded-xl bg-surface-2"
                 >
                   {comp.image ? (
-                    <img
-                      src={comp.image}
-                      alt={comp.name ?? comp.category}
-                      className="w-10 h-10 rounded-lg object-cover shrink-0"
-                    />
+                    <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0">
+                      <Image
+                        src={comp.image}
+                        alt={comp.name ?? comp.category}
+                        fill
+                        sizes="40px"
+                        className="object-cover"
+                      />
+                    </div>
                   ) : (
                     <div className="w-10 h-10 rounded-lg bg-border flex items-center justify-center shrink-0">
                       <Cpu className="w-5 h-5 text-text-secondary" />

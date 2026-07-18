@@ -27,6 +27,10 @@ function buildFilters(searchParams: URLSearchParams): ProductFilters {
 }
 
 function ProductsContent() {
+  useEffect(() => {
+    document.title = "Explore Products — BuildWise AI";
+  }, []);
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -109,6 +113,7 @@ function ProductsContent() {
               placeholder="Search components..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              aria-label="Search components"
               className="w-full rounded-lg border border-border bg-surface pl-10 pr-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-text-secondary/60"
             />
           </div>
@@ -135,6 +140,7 @@ function ProductsContent() {
                   page: 1,
                 })
               }
+              aria-label="Sort products"
               className="hidden md:block rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-text-primary outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
             >
               <option value="">Relevance</option>
@@ -148,21 +154,25 @@ function ProductsContent() {
             <div className="flex rounded-lg border border-border overflow-hidden">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`p-2.5 transition-colors ${
+                className={`p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px] ${
                   viewMode === "grid"
                     ? "bg-primary text-white"
                     : "bg-surface text-text-secondary hover:text-text-primary"
                 }`}
+                aria-label="Grid view"
+                aria-pressed={viewMode === "grid"}
               >
                 <Grid3X3 className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-2.5 transition-colors ${
+                className={`p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px] ${
                   viewMode === "list"
                     ? "bg-primary text-white"
                     : "bg-surface text-text-secondary hover:text-text-primary"
                 }`}
+                aria-label="List view"
+                aria-pressed={viewMode === "list"}
               >
                 <List className="w-4 h-4" />
               </button>

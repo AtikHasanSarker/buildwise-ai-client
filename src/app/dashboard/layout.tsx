@@ -26,7 +26,8 @@ export default function DashboardLayout({
           <div className="lg:hidden sticky top-16 z-30 bg-bg border-b border-border px-4 py-2">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+              className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
+              aria-label="Open sidebar menu"
             >
               <Menu className="w-5 h-5" />
               Menu

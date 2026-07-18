@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -190,6 +190,7 @@ function Step1Form({ onGenerate, loading }: Step1Props) {
               if (budgetError) setBudgetError("");
             }}
             placeholder="2000"
+            aria-label="Budget amount in dollars"
             className="w-full rounded-xl border border-border bg-surface-2 pl-10 pr-4 py-3 text-lg font-mono text-text-primary outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-text-secondary/50"
           />
         </div>
@@ -214,9 +215,11 @@ function Step1Form({ onGenerate, loading }: Step1Props) {
                 key={opt.value}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setPurpose(opt.value)}
+                aria-pressed={isActive}
                 className={`
                   relative flex flex-col items-center gap-2 p-4 rounded-xl border-2
                   transition-all duration-200 cursor-pointer text-center
+                  focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
                   ${
                     isActive
                       ? "border-primary bg-primary/10 shadow-glow-primary"
@@ -277,9 +280,11 @@ function Step1Form({ onGenerate, loading }: Step1Props) {
                 key={brand}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => toggleBrand(brand)}
+                aria-pressed={isActive}
                 className={`
                   px-3 py-1.5 rounded-full text-sm font-medium border
                   transition-all duration-200 cursor-pointer
+                  focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
                   ${
                     isActive
                       ? "border-primary bg-primary/10 text-primary"
@@ -590,6 +595,10 @@ function GeneratingSkeleton() {
    ────────────────────────────────────────────── */
 
 export default function AiBuildPage() {
+  useEffect(() => {
+    document.title = "AI Build Generator — BuildWise AI";
+  }, []);
+
   const { showToast } = useToast();
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);

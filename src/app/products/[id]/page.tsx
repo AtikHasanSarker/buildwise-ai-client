@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -44,7 +44,9 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+      aria-selected={active}
+      role="tab"
+      className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px] rounded-t ${
         active
           ? "border-primary text-primary"
           : "border-transparent text-text-secondary hover:text-text-primary hover:border-border"
@@ -126,6 +128,7 @@ function ReviewForm({
             onMouseEnter={() => setHoveredStar(s)}
             onMouseLeave={() => setHoveredStar(0)}
             onClick={() => setRating(s)}
+            aria-label={`Rate ${s} out of 5 stars`}
           >
             <Star
               className={`w-6 h-6 transition-colors ${
@@ -142,6 +145,7 @@ function ReviewForm({
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Share your experience with this product..."
+        aria-label="Review comment"
         className="w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-text-primary outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all resize-none min-h-[80px] placeholder:text-text-secondary/60"
         rows={3}
       />
@@ -349,13 +353,15 @@ function ImageGallery({ images, name }: { images: string[]; name: string }) {
           <>
             <button
               onClick={() => setActiveIdx((i) => (i > 0 ? i - 1 : images.length - 1))}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surface/80 backdrop-blur flex items-center justify-center shadow-soft hover:bg-surface transition-colors"
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surface/80 backdrop-blur flex items-center justify-center shadow-soft hover:bg-surface transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+              aria-label="Previous image"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => setActiveIdx((i) => (i < images.length - 1 ? i + 1 : 0))}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surface/80 backdrop-blur flex items-center justify-center shadow-soft hover:bg-surface transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surface/80 backdrop-blur flex items-center justify-center shadow-soft hover:bg-surface transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+              aria-label="Next image"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -370,7 +376,9 @@ function ImageGallery({ images, name }: { images: string[]; name: string }) {
             <button
               key={i}
               onClick={() => setActiveIdx(i)}
-              className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 shrink-0 transition-colors ${
+              aria-label={`View image ${i + 1}`}
+              aria-current={i === activeIdx ? "true" : undefined}
+              className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 shrink-0 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 ${
                 i === activeIdx ? "border-primary" : "border-border hover:border-text-secondary"
               }`}
             >
@@ -485,6 +493,10 @@ function ProductDetailSkeleton() {
 export default function ProductDetailPage() {
   const params = useParams();
   const id = params.id as string;
+
+  useEffect(() => {
+    document.title = "Product Details — BuildWise AI";
+  }, []);
 
   const { data: productData, isLoading } = useQuery({
     queryKey: ["product", id],
