@@ -14,7 +14,7 @@ import {
   Avatar,
 } from "@/components/ui";
 import { useToast } from "@/components/ui/toast";
-import { Sparkles, ShoppingCart, Heart, Zap } from "lucide-react";
+import { ShoppingCart, Heart, Zap } from "lucide-react";
 
 export default function UiKitPage() {
   const { showToast } = useToast();
