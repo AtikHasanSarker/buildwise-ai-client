@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/lib/auth-context";
 import { ToastProvider } from "@/components/ui/toast";
 import Navbar from "@/components/Navbar";
+import { ChatWidget } from "@/components/ai/ChatWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
           <ToastProvider>
             <Navbar />
             <main className="flex-1 flex flex-col">{children}</main>
+            <ChatWidget />
           </ToastProvider>
         </Providers>
       </body>
