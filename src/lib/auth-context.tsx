@@ -41,7 +41,7 @@ function useAuthState() {
     queryFn: async () => {
       try {
         const res = await getCurrentUser();
-        return res.data.user ?? null;
+        return res.data.data.user ?? null;
       } catch {
         return null;
       }
@@ -54,7 +54,7 @@ function useAuthState() {
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       loginUser({ email, password }),
     onSuccess: (res) => {
-      queryClient.setQueryData(["auth", "me"], res.data.user);
+      queryClient.setQueryData(["auth", "me"], res.data.data.user);
     },
   });
 
@@ -69,14 +69,14 @@ function useAuthState() {
       password: string;
     }) => registerUser({ name, email, password }),
     onSuccess: (res) => {
-      queryClient.setQueryData(["auth", "me"], res.data.user);
+      queryClient.setQueryData(["auth", "me"], res.data.data.user);
     },
   });
 
   const googleMutation = useMutation({
     mutationFn: (idToken: string) => loginWithGoogle(idToken),
     onSuccess: (res) => {
-      queryClient.setQueryData(["auth", "me"], res.data.user);
+      queryClient.setQueryData(["auth", "me"], res.data.data.user);
     },
   });
 
@@ -90,23 +90,30 @@ function useAuthState() {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      await loginMutation.mutateAsync({ email, password });
+      const res = await loginMutation.mutateAsync({ email, password });
+      // Ensure cache is updated before caller navigates
+      queryClient.setQueryData(["auth", "me"], res.data.data.user);
+      await queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
     },
-    [loginMutation]
+    [loginMutation, queryClient]
   );
 
   const register = useCallback(
     async (name: string, email: string, password: string) => {
-      await registerMutation.mutateAsync({ name, email, password });
+      const res = await registerMutation.mutateAsync({ name, email, password });
+      queryClient.setQueryData(["auth", "me"], res.data.data.user);
+      await queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
     },
-    [registerMutation]
+    [registerMutation, queryClient]
   );
 
   const googleLogin = useCallback(
     async (idToken: string) => {
-      await googleMutation.mutateAsync(idToken);
+      const res = await googleMutation.mutateAsync(idToken);
+      queryClient.setQueryData(["auth", "me"], res.data.data.user);
+      await queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
     },
-    [googleMutation]
+    [googleMutation, queryClient]
   );
 
   const logout = useCallback(async () => {
