@@ -335,7 +335,7 @@ export default function AdminDashboardPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-[250px] text-text-secondary text-sm">
+              <div className="flex items-center justify-center h-62.5 text-text-secondary text-sm">
                 No category data available
               </div>
             )}
@@ -379,7 +379,7 @@ export default function AdminDashboardPage() {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-[250px] text-text-secondary text-sm">
+              <div className="flex items-center justify-center h-62.5 text-text-secondary text-sm">
                 No AI usage data available
               </div>
             )}
@@ -424,7 +424,7 @@ export default function AdminDashboardPage() {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-[250px] text-text-secondary text-sm">
+              <div className="flex items-center justify-center h-62.5 text-text-secondary text-sm">
                 No user growth data available
               </div>
             )}

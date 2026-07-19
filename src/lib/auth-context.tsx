@@ -41,7 +41,7 @@ function useAuthState() {
     queryFn: async () => {
       try {
         const res = await getCurrentUser();
-        return res.data.user;
+        return res.data.user ?? null;
       } catch {
         return null;
       }

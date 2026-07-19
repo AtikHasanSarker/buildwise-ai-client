@@ -6,9 +6,15 @@ import { useRouter } from "next/navigation";
 import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/components/ui/toast";
+import { useCurrentTheme } from "@/lib/useCurrentTheme";
 import ThemeToggle from "@/components/ThemeToggle";
+import logoDark from "@/assets/images/logo-dark.png";
+import logoLight from "@/assets/images/logo-light.png";
+import Image from "next/image";
+
 
 export default function Navbar() {
+  const theme = useCurrentTheme();
   const { user, isLoading, logout } = useAuth();
   const { showToast } = useToast();
   const router = useRouter();
@@ -70,7 +76,12 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="text-lg font-bold text-text-primary">
-          BuildWise
+          <Image
+            src={theme === "dark" ? logoLight : logoDark}
+            alt="BuildWise AI"
+            className="h-12 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop nav */}
@@ -175,7 +186,11 @@ export default function Navbar() {
             className="md:hidden text-text-primary p-1 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
       </div>

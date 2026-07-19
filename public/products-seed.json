@@ -1,0 +1,489 @@
+[
+  {
+    "name": "Ryzen 7 7800X3D",
+    "brand": "AMD",
+    "category": "CPU",
+    "price": 449,
+    "description": "8-core, 16-thread gaming CPU with 3D V-Cache technology, delivering exceptional gaming performance and efficiency on AM5.",
+    "specifications": {
+      "socket": "AM5",
+      "cores": 8,
+      "threads": 16,
+      "baseClock": "4.2GHz",
+      "boostClock": "5.0GHz",
+      "tdp": 120,
+      "cache": "96MB"
+    },
+    "rating": 4.8,
+    "reviewCount": 214,
+    "stock": 35,
+    "images": [
+      "/images/products/cpu.jpg"
+    ]
+  },
+  {
+    "name": "Core i5-13600K",
+    "brand": "Intel",
+    "category": "CPU",
+    "price": 319,
+    "description": "14-core hybrid CPU (6P+8E) offering strong multi-threaded performance and great value for gaming and productivity on LGA1700.",
+    "specifications": {
+      "socket": "LGA1700",
+      "cores": 14,
+      "threads": 20,
+      "baseClock": "3.5GHz",
+      "boostClock": "5.1GHz",
+      "tdp": 125,
+      "cache": "24MB"
+    },
+    "rating": 4.6,
+    "reviewCount": 178,
+    "stock": 42,
+    "images": [
+      "/images/products/cpu.jpg"
+    ]
+  },
+  {
+    "name": "Ryzen 5 7600",
+    "brand": "AMD",
+    "category": "CPU",
+    "price": 199,
+    "description": "6-core budget-friendly AM5 CPU, a great entry point for gamers who want a modern platform without overspending.",
+    "specifications": {
+      "socket": "AM5",
+      "cores": 6,
+      "threads": 12,
+      "baseClock": "3.8GHz",
+      "boostClock": "5.1GHz",
+      "tdp": 65,
+      "cache": "32MB"
+    },
+    "rating": 4.5,
+    "reviewCount": 96,
+    "stock": 60,
+    "images": [
+      "/images/products/cpu.jpg"
+    ]
+  },
+  {
+    "name": "GeForce RTX 4070 Super",
+    "brand": "NVIDIA",
+    "category": "GPU",
+    "price": 599,
+    "description": "12GB GDDR6X card delivering excellent 1440p and entry 4K gaming performance with DLSS 3 support.",
+    "specifications": {
+      "vram": "12GB GDDR6X",
+      "wattageDraw": 220,
+      "interface": "PCIe 4.0",
+      "length": "285mm"
+    },
+    "rating": 4.7,
+    "reviewCount": 302,
+    "stock": 18,
+    "images": [
+      "/images/products/gpu.jpg"
+    ]
+  },
+  {
+    "name": "GeForce RTX 4080 Super",
+    "brand": "NVIDIA",
+    "category": "GPU",
+    "price": 999,
+    "description": "16GB GDDR6X flagship-tier card built for high-refresh 4K gaming and heavy creative workloads.",
+    "specifications": {
+      "vram": "16GB GDDR6X",
+      "wattageDraw": 320,
+      "interface": "PCIe 4.0",
+      "length": "310mm"
+    },
+    "rating": 4.9,
+    "reviewCount": 154,
+    "stock": 9,
+    "images": [
+      "/images/products/gpu.jpg"
+    ]
+  },
+  {
+    "name": "Radeon RX 7800 XT",
+    "brand": "AMD",
+    "category": "GPU",
+    "price": 499,
+    "description": "16GB card offering strong 1440p performance and great VRAM headroom for future titles.",
+    "specifications": {
+      "vram": "16GB GDDR6",
+      "wattageDraw": 263,
+      "interface": "PCIe 4.0",
+      "length": "267mm"
+    },
+    "rating": 4.6,
+    "reviewCount": 121,
+    "stock": 22,
+    "images": [
+      "/images/products/gpu.jpg"
+    ]
+  },
+  {
+    "name": "ASUS ROG Strix B650-A",
+    "brand": "ASUS",
+    "category": "Motherboard",
+    "price": 269,
+    "description": "AM5 ATX motherboard with robust VRMs, PCIe 5.0 support, and premium build quality for enthusiast builds.",
+    "specifications": {
+      "socket": "AM5",
+      "ramType": "DDR5",
+      "formFactor": "ATX",
+      "maxRam": "128GB",
+      "pcieVersion": "5.0"
+    },
+    "rating": 4.7,
+    "reviewCount": 88,
+    "stock": 27,
+    "images": [
+      "/images/products/motherboard.jpg"
+    ]
+  },
+  {
+    "name": "MSI MAG Z790 Tomahawk",
+    "brand": "MSI",
+    "category": "Motherboard",
+    "price": 239,
+    "description": "LGA1700 ATX board with strong power delivery, ideal pairing for 13th/14th-gen Intel CPUs.",
+    "specifications": {
+      "socket": "LGA1700",
+      "ramType": "DDR5",
+      "formFactor": "ATX",
+      "maxRam": "128GB",
+      "pcieVersion": "5.0"
+    },
+    "rating": 4.6,
+    "reviewCount": 64,
+    "stock": 30,
+    "images": [
+      "/images/products/motherboard.jpg"
+    ]
+  },
+  {
+    "name": "Gigabyte B650M DS3H",
+    "brand": "Gigabyte",
+    "category": "Motherboard",
+    "price": 129,
+    "description": "Compact micro-ATX AM5 board, a solid budget choice for smaller builds.",
+    "specifications": {
+      "socket": "AM5",
+      "ramType": "DDR5",
+      "formFactor": "Micro-ATX",
+      "maxRam": "96GB",
+      "pcieVersion": "4.0"
+    },
+    "rating": 4.3,
+    "reviewCount": 41,
+    "stock": 50,
+    "images": [
+      "/images/products/motherboard.jpg"
+    ]
+  },
+  {
+    "name": "Corsair Vengeance 32GB DDR5",
+    "brand": "Corsair",
+    "category": "RAM",
+    "price": 109,
+    "description": "2x16GB DDR5-6000 kit with tight timings, great for both gaming and productivity workloads.",
+    "specifications": {
+      "ramType": "DDR5",
+      "capacity": "32GB (2x16GB)",
+      "speed": "6000MHz",
+      "casLatency": "CL36"
+    },
+    "rating": 4.7,
+    "reviewCount": 190,
+    "stock": 70,
+    "images": [
+      "/images/products/ram.jpg"
+    ]
+  },
+  {
+    "name": "G.Skill Trident Z5 32GB DDR5",
+    "brand": "G.Skill",
+    "category": "RAM",
+    "price": 124,
+    "description": "High-speed DDR5-6400 kit with an aggressive RGB heatspreader design for premium builds.",
+    "specifications": {
+      "ramType": "DDR5",
+      "capacity": "32GB (2x16GB)",
+      "speed": "6400MHz",
+      "casLatency": "CL32"
+    },
+    "rating": 4.8,
+    "reviewCount": 76,
+    "stock": 33,
+    "images": [
+      "/images/products/ram.jpg"
+    ]
+  },
+  {
+    "name": "Kingston Fury Beast 16GB DDR4",
+    "brand": "Kingston",
+    "category": "RAM",
+    "price": 44,
+    "description": "Reliable DDR4-3200 kit, a budget-friendly option for older platforms or entry builds.",
+    "specifications": {
+      "ramType": "DDR4",
+      "capacity": "16GB (2x8GB)",
+      "speed": "3200MHz",
+      "casLatency": "CL16"
+    },
+    "rating": 4.5,
+    "reviewCount": 132,
+    "stock": 85,
+    "images": [
+      "/images/products/ram.jpg"
+    ]
+  },
+  {
+    "name": "Samsung 990 Pro 2TB",
+    "brand": "Samsung",
+    "category": "SSD",
+    "price": 159,
+    "description": "PCIe 4.0 NVMe SSD with class-leading read/write speeds, ideal for fast load times and large game libraries.",
+    "specifications": {
+      "capacity": "2TB",
+      "interface": "NVMe PCIe 4.0",
+      "readSpeed": "7450MB/s",
+      "writeSpeed": "6900MB/s"
+    },
+    "rating": 4.9,
+    "reviewCount": 267,
+    "stock": 40,
+    "images": [
+      "/images/products/ssd.jpg"
+    ]
+  },
+  {
+    "name": "WD Black SN770 1TB",
+    "brand": "Western Digital",
+    "category": "SSD",
+    "price": 69,
+    "description": "Solid PCIe 4.0 NVMe drive offering great price-to-performance for gaming builds.",
+    "specifications": {
+      "capacity": "1TB",
+      "interface": "NVMe PCIe 4.0",
+      "readSpeed": "5150MB/s",
+      "writeSpeed": "4900MB/s"
+    },
+    "rating": 4.6,
+    "reviewCount": 143,
+    "stock": 65,
+    "images": [
+      "/images/products/ssd.jpg"
+    ]
+  },
+  {
+    "name": "Crucial MX500 1TB",
+    "brand": "Crucial",
+    "category": "SSD",
+    "price": 54,
+    "description": "Dependable SATA SSD, a great low-cost upgrade path or secondary storage drive.",
+    "specifications": {
+      "capacity": "1TB",
+      "interface": "SATA III",
+      "readSpeed": "560MB/s",
+      "writeSpeed": "510MB/s"
+    },
+    "rating": 4.5,
+    "reviewCount": 210,
+    "stock": 90,
+    "images": [
+      "/images/products/ssd.jpg"
+    ]
+  },
+  {
+    "name": "Seagate Barracuda 2TB",
+    "brand": "Seagate",
+    "category": "HDD",
+    "price": 54,
+    "description": "High-capacity 7200RPM hard drive, ideal for bulk storage of media and backups.",
+    "specifications": {
+      "capacity": "2TB",
+      "interface": "SATA III",
+      "rpm": 7200,
+      "cache": "256MB"
+    },
+    "rating": 4.3,
+    "reviewCount": 98,
+    "stock": 55,
+    "images": [
+      "/images/products/hdd.jpg"
+    ]
+  },
+  {
+    "name": "Corsair RM850x",
+    "brand": "Corsair",
+    "category": "PSU",
+    "price": 139,
+    "description": "850W fully modular 80+ Gold PSU with quiet operation and excellent stable power delivery.",
+    "specifications": {
+      "wattage": 850,
+      "efficiency": "80+ Gold",
+      "modular": "Fully Modular",
+      "formFactor": "ATX"
+    },
+    "rating": 4.8,
+    "reviewCount": 176,
+    "stock": 38,
+    "images": [
+      "/images/products/psu.jpg"
+    ]
+  },
+  {
+    "name": "EVGA SuperNOVA 750 GT",
+    "brand": "EVGA",
+    "category": "PSU",
+    "price": 99,
+    "description": "750W 80+ Gold fully modular PSU, reliable power for mid-to-high-end builds.",
+    "specifications": {
+      "wattage": 750,
+      "efficiency": "80+ Gold",
+      "modular": "Fully Modular",
+      "formFactor": "ATX"
+    },
+    "rating": 4.6,
+    "reviewCount": 112,
+    "stock": 44,
+    "images": [
+      "/images/products/psu.jpg"
+    ]
+  },
+  {
+    "name": "Cooler Master MWE 650",
+    "brand": "Cooler Master",
+    "category": "PSU",
+    "price": 64,
+    "description": "650W 80+ Bronze budget PSU, a dependable choice for value-focused gaming builds.",
+    "specifications": {
+      "wattage": 650,
+      "efficiency": "80+ Bronze",
+      "modular": "Non-Modular",
+      "formFactor": "ATX"
+    },
+    "rating": 4.3,
+    "reviewCount": 87,
+    "stock": 58,
+    "images": [
+      "/images/products/psu.jpg"
+    ]
+  },
+  {
+    "name": "Lian Li Lancool 216",
+    "brand": "Lian Li",
+    "category": "Case",
+    "price": 109,
+    "description": "Mesh-front ATX case with excellent airflow, tempered glass side panel, and clean cable management.",
+    "specifications": {
+      "formFactor": "ATX",
+      "sidePanel": "Tempered Glass",
+      "fansIncluded": 3,
+      "maxGpuLength": "392mm"
+    },
+    "rating": 4.8,
+    "reviewCount": 205,
+    "stock": 25,
+    "images": [
+      "/images/products/case.jpg"
+    ]
+  },
+  {
+    "name": "NZXT H5 Flow",
+    "brand": "NZXT",
+    "category": "Case",
+    "price": 89,
+    "description": "Minimalist ATX case with strong airflow and NZXT's signature clean cable routing design.",
+    "specifications": {
+      "formFactor": "ATX",
+      "sidePanel": "Tempered Glass",
+      "fansIncluded": 2,
+      "maxGpuLength": "365mm"
+    },
+    "rating": 4.6,
+    "reviewCount": 168,
+    "stock": 31,
+    "images": [
+      "/images/products/case.jpg"
+    ]
+  },
+  {
+    "name": "Fractal Design Pop Air",
+    "brand": "Fractal Design",
+    "category": "Case",
+    "price": 99,
+    "description": "Versatile mesh-front case balancing airflow and noise dampening, with modular interior layout.",
+    "specifications": {
+      "formFactor": "ATX",
+      "sidePanel": "Mesh/Tempered Glass",
+      "fansIncluded": 3,
+      "maxGpuLength": "355mm"
+    },
+    "rating": 4.5,
+    "reviewCount": 94,
+    "stock": 29,
+    "images": [
+      "/images/products/case.jpg"
+    ]
+  },
+  {
+    "name": "Noctua NH-D15",
+    "brand": "Noctua",
+    "category": "Cooler",
+    "price": 109,
+    "description": "Dual-tower air cooler renowned for exceptional cooling performance and near-silent operation.",
+    "specifications": {
+      "type": "Air Cooler",
+      "socketSupport": "AM5, LGA1700",
+      "fanSize": "140mm x2",
+      "tdpSupport": 250
+    },
+    "rating": 4.9,
+    "reviewCount": 231,
+    "stock": 20,
+    "images": [
+      "/images/products/cooler.jpg"
+    ]
+  },
+  {
+    "name": "Corsair iCUE H150i Elite",
+    "brand": "Corsair",
+    "category": "Cooler",
+    "price": 189,
+    "description": "360mm AIO liquid cooler with RGB fans and a customizable LCD pump display for high-TDP CPUs.",
+    "specifications": {
+      "type": "Liquid Cooler (AIO)",
+      "socketSupport": "AM5, LGA1700",
+      "radiatorSize": "360mm",
+      "tdpSupport": 300
+    },
+    "rating": 4.7,
+    "reviewCount": 142,
+    "stock": 16,
+    "images": [
+      "/images/products/cooler.jpg"
+    ]
+  },
+  {
+    "name": "Cooler Master Hyper 212",
+    "brand": "Cooler Master",
+    "category": "Cooler",
+    "price": 39,
+    "description": "Legendary budget air cooler offering reliable performance for entry to mid-range CPUs.",
+    "specifications": {
+      "type": "Air Cooler",
+      "socketSupport": "AM5, LGA1700",
+      "fanSize": "120mm",
+      "tdpSupport": 150
+    },
+    "rating": 4.4,
+    "reviewCount": 320,
+    "stock": 75,
+    "images": [
+      "/images/products/cooler.jpg"
+    ]
+  }
+]

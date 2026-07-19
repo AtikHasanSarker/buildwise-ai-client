@@ -326,8 +326,8 @@ export function ChatWidget() {
                 try {
                   const parsed = JSON.parse(data);
 
-                  if (parsed.text) {
-                    accumulated += parsed.text;
+                  if (parsed.content) {
+                    accumulated += parsed.content;
                     setMessages((prev) => {
                       const updated = [...prev];
                       updated[updated.length - 1] = {

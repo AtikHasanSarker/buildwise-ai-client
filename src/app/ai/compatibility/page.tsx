@@ -485,7 +485,7 @@ function IssueCard({
         issue.alternativeProductIds.map(async (id) => {
           try {
             const res = await apiClient.get(`/products/${id}`);
-            return res.data.data.product as Product;
+            return res.data.product as Product;
           } catch {
             return null;
           }
@@ -742,7 +742,7 @@ function CompatibilityContent() {
           category: c.category,
         })),
       });
-      setResult(res.data.data);
+      setResult(res.data);
       setHasChecked(true);
     } catch (err: unknown) {
       const apiErr = err as { response?: { data?: { error?: { code?: string }; message?: string } }; message?: string };

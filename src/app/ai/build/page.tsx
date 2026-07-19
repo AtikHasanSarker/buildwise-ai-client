@@ -42,17 +42,22 @@ type Purpose = "gaming" | "programming" | "editing" | "office";
 interface BuildComponent {
   productId: string;
   category: string;
-  name: string;
-  brand: string;
-  price: number;
-  image?: string;
-  specifications?: Record<string, string | number>;
+  reasoning: string;
+  product: {
+    name: string;
+    brand: string;
+    price: number;
+    images?: string[];
+    specifications?: Record<string, string | number>;
+  };
 }
 
 interface BuildResult {
   components: BuildComponent[];
   totalPrice: number;
-  reasoning: Record<string, string>;
+  reasoning: {
+    overall: string;
+  };
 }
 
 interface GenerateResponse {
@@ -395,7 +400,7 @@ function BuildResultCard({ result, budget, purpose, brands, onRegenerate, loadin
             {build.components.map((comp) => {
               const Icon = CATEGORY_ICONS[comp.category] || Cpu;
               const isExpanded = !!expandedReasons[comp.category];
-              const reason = build.reasoning[comp.category];
+              const reason = comp.reasoning;
 
               return (
                 <div
@@ -412,12 +417,12 @@ function BuildResultCard({ result, budget, purpose, brands, onRegenerate, loadin
                         {comp.category}
                       </p>
                       <p className="text-sm font-semibold text-text-primary truncate">
-                        {comp.name}
+                        {comp.product.name}
                       </p>
-                      <p className="text-xs text-text-secondary">{comp.brand}</p>
+                      <p className="text-xs text-text-secondary">{comp.product.brand}</p>
                     </div>
                     <span className="text-sm font-bold font-mono text-text-primary shrink-0">
-                      ${comp.price.toLocaleString()}
+                      ${comp.product.price.toLocaleString()}
                     </span>
                     {reason && (
                       <button

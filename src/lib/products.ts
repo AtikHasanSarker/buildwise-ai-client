@@ -3,7 +3,7 @@ import apiClient from "./api-client";
 /* ─── Types ─── */
 
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   brand: string;
   category: string;
@@ -33,6 +33,13 @@ export interface ProductFilters {
   maxPrice?: number;
   search?: string;
   sort?: "price_asc" | "price_desc" | "rating" | "newest";
+}
+
+export interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+  icon: string;
 }
 
 export interface Review {
@@ -80,8 +87,8 @@ export async function getProduct(id: string): Promise<Product> {
   return res.data.data.product;
 }
 
-export async function getCategories(): Promise<string[]> {
-  const res = await apiClient.get<Envelope<{ categories: string[] }>>(
+export async function getCategories(): Promise<Category[]> {
+  const res = await apiClient.get<Envelope<{ categories: Category[] }>>(
     "/products/categories"
   );
   return res.data.data.categories;

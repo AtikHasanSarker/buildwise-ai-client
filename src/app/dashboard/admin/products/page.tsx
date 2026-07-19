@@ -20,6 +20,7 @@ import { Card, Button, Modal, Badge, Skeleton } from "@/components/ui";
 import { useToast } from "@/components/ui/toast";
 import apiClient from "@/lib/api-client";
 import { type Product } from "@/lib/products";
+import Image from "next/image";
 
 interface ProductsResponse {
   products: Product[];
@@ -256,14 +257,14 @@ export default function AdminProductsPage() {
                 ) : data?.products && data.products.length > 0 ? (
                   data.products.map((product) => (
                     <tr
-                      key={product.id}
+                      key={product._id}
                       className="border-b border-border/50 hover:bg-surface-2/50 transition-colors"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-surface-2 overflow-hidden shrink-0">
                             {product.images?.[0] ? (
-                              <img
+                              <Image
                                 src={product.images[0]}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
@@ -317,14 +318,14 @@ export default function AdminProductsPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-1">
                           <Link
-                            href={`/products/${product.id}`}
+                            href={`/products/${product._id}`}
                             className="p-1.5 rounded-lg hover:bg-surface-2 text-text-secondary hover:text-text-primary transition-colors"
                             title="View"
                           >
                             <Eye className="w-4 h-4" />
                           </Link>
                           <Link
-                            href={`/dashboard/admin/products/${product.id}/edit`}
+                            href={`/dashboard/admin/products/${product._id}/edit`}
                             className="p-1.5 rounded-lg hover:bg-primary/10 text-text-secondary hover:text-primary transition-colors"
                             title="Edit"
                           >
@@ -415,7 +416,7 @@ export default function AdminProductsPage() {
             loading={deleteMutation.isPending}
             onClick={() => {
               if (deleteProduct) {
-                deleteMutation.mutate(deleteProduct.id);
+                deleteMutation.mutate(deleteProduct._id);
               }
             }}
             className="bg-error hover:bg-error/90 text-white"

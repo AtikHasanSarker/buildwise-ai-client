@@ -53,7 +53,7 @@ function ProductsContent() {
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     }, 400);
     return () => clearTimeout(timeout);
-  }, [searchInput]);
+  }, [pathname, searchParams,router, searchInput]);
 
   const updateFilters = useCallback(
     (newFilters: ProductFilters) => {
@@ -73,7 +73,10 @@ function ProductsContent() {
   // Fetch products
   const { data: productsData, isLoading } = useQuery({
     queryKey: ["products", filters],
-    queryFn: () => getProducts(filters),
+    queryFn: async () => {
+      const data = await getProducts(filters);
+      return data ?? { products: [], total: 0, page: 1, totalPages: 0 };
+    },
   });
 
   // Fetch categories
@@ -240,12 +243,12 @@ function ProductsContent() {
                 <div
                   className={`grid gap-4 ${
                     viewMode === "grid"
-                      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                       : "grid-cols-1"
                   }`}
                 >
                   {products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product._id} product={product} />
                   ))}
                 </div>
 

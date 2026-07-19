@@ -2,10 +2,10 @@
 
 import { X, RotateCcw } from "lucide-react";
 import { Button, Badge } from "@/components/ui";
-import type { ProductFilters } from "@/lib/products";
+import type { ProductFilters, Category } from "@/lib/products";
 
 interface ProductFiltersProps {
-  categories: string[];
+  categories: Category[];
   filters: ProductFilters;
   onFilterChange: (filters: ProductFilters) => void;
   onClose?: () => void;
@@ -60,7 +60,10 @@ export function ProductFiltersPanel({
             </button>
           )}
           {onClose && (
-            <button onClick={onClose} className="text-text-secondary hover:text-text-primary">
+            <button
+              onClick={onClose}
+              className="text-text-secondary hover:text-text-primary"
+            >
               <X className="w-5 h-5" />
             </button>
           )}
@@ -90,34 +93,50 @@ export function ProductFiltersPanel({
 
       {/* Categories */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-text-primary">Category</label>
+        <label className="text-sm font-medium text-text-primary">
+          Category
+        </label>
         <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto">
           {categories.map((cat) => (
             <button
-              key={cat}
+              key={cat._id}
               onClick={() =>
-                update("category", filters.category === cat ? undefined : cat)
+                update(
+                  "category",
+                  filters.category === cat.name ? undefined : cat.name
+                )
               }
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors ${
-                filters.category === cat
+                filters.category === cat.name
                   ? "bg-primary/10 text-primary font-medium"
                   : "text-text-secondary hover:bg-surface-2 hover:text-text-primary"
               }`}
             >
               <div
                 className={`w-3.5 h-3.5 rounded border-2 flex items-center justify-center transition-colors ${
-                  filters.category === cat
+                  filters.category === cat.name
                     ? "border-primary bg-primary"
                     : "border-border"
                 }`}
               >
-                {filters.category === cat && (
-                  <svg className="w-2 h-2 text-white" viewBox="0 0 12 12" fill="none">
-                    <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                {filters.category === cat.name && (
+                  <svg
+                    className="w-2 h-2 text-white"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                  >
+                    <path
+                      d="M2 6l3 3 5-5"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 )}
               </div>
-              {cat}
+
+              {cat.name}
             </button>
           ))}
         </div>
@@ -125,7 +144,9 @@ export function ProductFiltersPanel({
 
       {/* Price Range */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-text-primary">Price Range</label>
+        <label className="text-sm font-medium text-text-primary">
+          Price Range
+        </label>
         <div className="flex flex-col gap-1.5">
           {PRICE_RANGES.map((range) => {
             const isActive =
@@ -191,7 +212,11 @@ export function ProductFiltersPanel({
 
       {/* Mobile close */}
       {onClose && (
-        <Button variant="primary" className="w-full md:hidden" onClick={onClose}>
+        <Button
+          variant="primary"
+          className="w-full md:hidden"
+          onClick={onClose}
+        >
           Show Results
         </Button>
       )}

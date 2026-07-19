@@ -18,8 +18,8 @@ export function ProductCard({ product }: ProductCardProps) {
     <Card hover padding="none" className="overflow-hidden group">
       {/* Image */}
       <Link
-        href={`/products/${product.id}`}
-        className="block relative aspect-square focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px] rounded-t-xl"
+        href={`/products/${product._id}`}
+        className="block relative aspect-square focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded-t-xl"
         aria-label={`View ${product.name}`}
       >
         {!imgLoaded && (
@@ -52,7 +52,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Content */}
       <div className="p-4 flex flex-col gap-2">
         <Link
-          href={`/products/${product.id}`}
+          href={`/products/${product._id}`}
           className="focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
         >
           <h3 className="text-sm font-semibold text-text-primary line-clamp-2 leading-snug">
@@ -97,7 +97,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Actions — visible on hover desktop, always on mobile */}
         <div className="flex gap-2 pt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
           <Link
-            href={`/products/${product.id}`}
+            href={`/products/${product._id}`}
             className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-transparent px-4 py-2 text-xs font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             <Eye className="w-3.5 h-3.5" />
