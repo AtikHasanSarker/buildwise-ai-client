@@ -509,6 +509,7 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<Tab>("description");
   const [isFavorited, setIsFavorited] = useState(false);
   const { addToBuild, replaceInBuild, isInBuild, items } = useBuild();
+  const { showToast } = useToast();
   const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
   const [adding, setAdding] = useState(false);
 
