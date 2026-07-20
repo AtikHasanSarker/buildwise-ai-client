@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/lib/auth-context";
+import { BuildProvider } from "@/lib/build-context";
 import { ToastProvider } from "@/components/ui/toast";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -45,12 +46,14 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <div className="tech-bg" aria-hidden="true" />
         <Providers>
-          <ToastProvider>
-            <Navbar />
-            <main className="flex-1 flex flex-col">{children}</main>
-            <Footer />
-            <ChatWidget />
-          </ToastProvider>
+          <BuildProvider>
+            <ToastProvider>
+              <Navbar />
+              <main className="flex-1 flex flex-col">{children}</main>
+              <Footer />
+              <ChatWidget />
+            </ToastProvider>
+          </BuildProvider>
         </Providers>
       </body>
     </html>

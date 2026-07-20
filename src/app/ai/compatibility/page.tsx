@@ -262,7 +262,7 @@ function ProductSearch({
               ) : (
                 products.map((product) => (
                   <button
-                    key={product.id}
+                    key={product._id}
                     onClick={() => {
                       onSelect(product);
                       setIsOpen(false);
@@ -588,7 +588,7 @@ function IssueCard({
                     <div className="flex gap-3 overflow-x-auto pb-1">
                       {alts.map((alt) => (
                         <button
-                          key={alt.id}
+                          key={alt._id}
                           onClick={() => onSwapAlternative(alt)}
                           aria-label={`Use ${alt.name} as alternative`}
                           className="flex-shrink-0 w-48 rounded-lg border border-border bg-surface p-3 text-left hover:border-primary hover:shadow-soft transition-all group focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
@@ -704,7 +704,7 @@ function CompatibilityContent() {
         return [
           ...filtered,
           {
-            productId: product.id,
+            productId: product._id,
             category: product.category,
             name: product.name,
             brand: product.brand,
@@ -768,7 +768,7 @@ function CompatibilityContent() {
         prev.map((c) =>
           c.category === product.category
             ? {
-                productId: product.id,
+                productId: product._id,
                 category: product.category,
                 name: product.name,
                 brand: product.brand,

@@ -18,6 +18,8 @@ import { Button, Badge, Skeleton, TextLineSkeleton } from "@/components/ui";
 import { Avatar } from "@/components/ui/Avatar";
 import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
+import { useBuild } from "@/lib/build-context";
+import { ReplaceConfirmModal } from "@/components/ReplaceConfirmModal";
 import {
   getProduct,
   getReviews,
@@ -401,14 +403,14 @@ function ImageGallery({ images, name }: { images: string[]; name: string }) {
 
 function RelatedProducts({ product }: { product: Product }) {
   const { data } = useQuery({
-    queryKey: ["products", "related", product.category, product.id],
+    queryKey: ["products", "related", product.category, product._id],
     queryFn: () =>
       getProducts({ category: product.category, limit: 8 }),
     staleTime: 5 * 60 * 1000,
   });
 
   const related = (data?.products || []).filter(
-    (p: Product) => p.id !== product.id
+    (p: Product) => p._id !== product._id
   );
   if (related.length === 0) return null;
 
@@ -420,8 +422,8 @@ function RelatedProducts({ product }: { product: Product }) {
       <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
         {related.map((p) => (
           <Link
-            key={p.id}
-            href={`/products/${p.id}`}
+            key={p._id}
+            href={`/products/${p._id}`}
             className="snap-start shrink-0 w-56 rounded-xl bg-surface border border-border shadow-soft overflow-hidden hover:shadow-elevated hover:-translate-y-1 transition-all duration-200"
           >
             <div className="relative aspect-square">
@@ -506,8 +508,51 @@ export default function ProductDetailPage() {
 
   const [activeTab, setActiveTab] = useState<Tab>("description");
   const [isFavorited, setIsFavorited] = useState(false);
+  const { addToBuild, replaceInBuild, isInBuild, items } = useBuild();
+  const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
+  const [adding, setAdding] = useState(false);
 
   const product = productData;
+
+  const existingItem = product && isInBuild(product._id)
+    ? null
+    : product
+    ? items.find((i) => i.category === product.category)
+    : null;
+
+  function handleAddToBuild() {
+    if (!product) return;
+    if (product.stock === 0) return;
+
+    if (isInBuild(product._id)) {
+      showToast("info", "This product is already in your build");
+      return;
+    }
+
+    if (existingItem) {
+      setPendingProduct(product);
+      return;
+    }
+
+    setAdding(true);
+    setTimeout(() => {
+      addToBuild(product);
+      setAdding(false);
+      showToast("success", `${product.name} added to build`);
+    }, 300);
+  }
+
+  function handleConfirmReplace() {
+    if (!pendingProduct) return;
+    const prod = pendingProduct;
+    setPendingProduct(null);
+    setAdding(true);
+    setTimeout(() => {
+      replaceInBuild(prod);
+      setAdding(false);
+      showToast("success", `${prod.name} replaced in build`);
+    }, 300);
+  }
 
   if (isLoading) return <ProductDetailSkeleton />;
   if (!product) {
@@ -622,11 +667,15 @@ export default function ProductDetailPage() {
               <Button
                 variant="primary"
                 size="lg"
-                icon={<ShoppingCart className="w-5 h-5" />}
+                icon={
+                  adding ? undefined : <ShoppingCart className="w-5 h-5" />
+                }
+                loading={adding}
                 disabled={product.stock === 0}
                 className="flex-1"
+                onClick={handleAddToBuild}
               >
-                Add to Build
+                {isInBuild(product._id) ? "In Build" : "Add to Build"}
               </Button>
               <Button
                 variant="secondary"
@@ -708,7 +757,7 @@ export default function ProductDetailPage() {
 
           {activeTab === "reviews" && (
             <ReviewsTab
-              productId={product.id}
+              productId={product._id}
               averageRating={product.rating}
               total={product.reviewCount}
             />
@@ -718,6 +767,15 @@ export default function ProductDetailPage() {
         {/* Related products */}
         <RelatedProducts product={product} />
       </div>
+
+      <ReplaceConfirmModal
+        open={!!pendingProduct}
+        onClose={() => setPendingProduct(null)}
+        onConfirm={handleConfirmReplace}
+        category={pendingProduct?.category ?? ""}
+        existingName={existingItem?.name ?? ""}
+        newName={pendingProduct?.name ?? ""}
+      />
     </div>
   );
 }

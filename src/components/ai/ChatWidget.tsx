@@ -267,17 +267,14 @@ export function ChatWidget() {
       setInputValue("");
       setIsStreaming(true);
       setLoginPrompt(false);
+      setSuggestedPrompts([]);
 
       // Add placeholder for streaming response
       const assistantMessage: Message = { role: "assistant", content: "" };
       setMessages((prev) => [...prev, assistantMessage]);
 
       try {
-        const baseUrl =
-          process.env.NEXT_PUBLIC_API_BASE_URL ||
-          "http://localhost:5000/api/v1";
-
-        const response = await fetch(`${baseUrl}/ai/chat`, {
+        const response = await fetch(`${apiClient.defaults.baseURL}/ai/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -321,12 +318,14 @@ export function ChatWidget() {
             for (const line of lines) {
               if (line.startsWith("data: ")) {
                 const data = line.slice(6);
-                if (data === "[DONE]") continue;
+                if (data === "[DONE]") {
+                  continue;
+                }
 
                 try {
                   const parsed = JSON.parse(data);
 
-                  if (parsed.content) {
+                  if (parsed.type === "token" && parsed.content) {
                     accumulated += parsed.content;
                     setMessages((prev) => {
                       const updated = [...prev];
@@ -338,15 +337,20 @@ export function ChatWidget() {
                     });
                   }
 
-                  if (parsed.conversationId) {
-                    newConversationId = parsed.conversationId;
+                  if (parsed.type === "error") {
+                    throw new Error(parsed.message || "AI service error");
                   }
 
-                  if (parsed.suggestedPrompts) {
-                    newPrompts = parsed.suggestedPrompts;
+                  if (parsed.type === "done") {
+                    if (parsed.conversationId) {
+                      newConversationId = parsed.conversationId;
+                    }
+                    if (parsed.suggestedPrompts) {
+                      newPrompts = parsed.suggestedPrompts;
+                    }
                   }
                 } catch {
-                  // skip malformed JSON lines
+                  // SSE parse error — ignore malformed chunks
                 }
               }
             }
@@ -410,7 +414,7 @@ export function ChatWidget() {
             const updated = [...prev];
             updated[updated.length - 1] = {
               role: "assistant",
-              content: "",
+              content: error.message || "Something went wrong. Please try again.",
             };
             return updated;
           });

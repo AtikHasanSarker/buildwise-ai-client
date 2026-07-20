@@ -363,7 +363,7 @@ function BuildResultCard({ result, budget, purpose, brands, onRegenerate, loadin
           category: c.category,
         })),
         totalPrice: build.totalPrice,
-        aiRecommendation: result.conversationId,
+        aiRecommendation: result.conversationId ? { conversationId: result.conversationId } : undefined,
       });
       setSaved(true);
       showToast("success", "Build saved! View it in your dashboard.");
@@ -620,12 +620,12 @@ export default function AiBuildPage() {
       setLastParams({ budget, purpose, brands });
 
       try {
-        const res = await apiClient.post<GenerateResponse>("/ai/generate-build", {
+        const res = await apiClient.post<{ success: boolean; data: GenerateResponse; message: string }>("/ai/generate-build", {
           budget,
           purpose,
           preferredBrand: brands.length > 0 ? brands : undefined,
         });
-        setResult(res.data);
+        setResult(res.data.data);
         setStep(2);
       } catch (err: unknown) {
         const apiErr = err as ApiError;

@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown, Cpu } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useBuild } from "@/lib/build-context";
 import { useToast } from "@/components/ui/toast";
 import { useCurrentTheme } from "@/lib/useCurrentTheme";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -16,6 +17,7 @@ import Image from "next/image";
 export default function Navbar() {
   const theme = useCurrentTheme();
   const { user, isLoading, logout } = useAuth();
+  const { itemCount } = useBuild();
   const { showToast } = useToast();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -99,6 +101,12 @@ export default function Navbar() {
             Builds
           </Link>
           <Link
+            href="/builds/current"
+            className="text-sm text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
+          >
+            Current Build
+          </Link>
+          <Link
             href="/ai"
             className="text-sm text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
           >
@@ -108,6 +116,19 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+          {/* Current Build badge */}
+          <Link
+            href="/builds/current"
+            className="relative flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+          >
+            <Cpu className="w-4 h-4" />
+            <span className="hidden sm:inline">Build</span>
+            {itemCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center px-1">
+                {itemCount}
+              </span>
+            )}
+          </Link>
           <ThemeToggle />
           {isLoading ? (
             <div className="w-8 h-8 rounded-full bg-surface-2 animate-pulse" />
@@ -211,6 +232,13 @@ export default function Navbar() {
             className="text-sm text-text-secondary hover:text-text-primary"
           >
             Builds
+          </Link>
+          <Link
+            href="/builds/current"
+            onClick={() => setMobileOpen(false)}
+            className="text-sm text-text-secondary hover:text-text-primary"
+          >
+            Current Build
           </Link>
           <Link
             href="/ai"
