@@ -3,8 +3,7 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
-import { useGoogleSignIn } from "@/lib/use-google-sign-in";
+import { authClient } from "@/lib/auth-client";
 import { Button, Input } from "@/components/ui";
 import { useToast } from "@/components/ui/toast";
 
@@ -14,7 +13,7 @@ export default function LoginPage() {
   useEffect(() => {
     document.title = "Login — BuildWise AI";
   }, []);
-  const { login, loginWithGoogle } = useAuth();
+
   const { showToast } = useToast();
 
   const [email, setEmail] = useState("");
@@ -25,22 +24,13 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleGoogleCredential = async (idToken: string) => {
+  async function handleGoogleSignin() {
     setGoogleLoading(true);
-    try {
-      await loginWithGoogle(idToken);
-      showToast("success", "Signed in with Google successfully");
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : "Google sign-in failed. Try again.";
-      showToast("error", msg);
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
-
-  const { signIn: googleSignIn, loaded: googleLoaded } = useGoogleSignIn(handleGoogleCredential);
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  }
 
   function validate(): boolean {
     const errs: typeof errors = {};
@@ -58,17 +48,22 @@ export default function LoginPage() {
     if (!validate()) return;
 
     setSubmitting(true);
-    try {
-      await login(email, password);
-      showToast("success", "Signed in successfully");
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : "Login failed. Try again.";
-      showToast("error", msg);
-    } finally {
-      setSubmitting(false);
-    }
+    await authClient.signIn.email(
+      {
+        email,
+        password,
+      },
+      {
+        onSuccess: () => {
+          showToast("success", "Signed in successfully");
+          router.push("/dashboard");
+        },
+        onError: (ctx) => {
+          showToast("error", ctx.error.message);
+        },
+      }
+    );
+    setSubmitting(false);
   }
 
   return (
@@ -141,7 +136,6 @@ export default function LoginPage() {
           variant="secondary"
           className="w-full focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           loading={googleLoading}
-          disabled={!googleLoaded}
           icon={
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -162,7 +156,7 @@ export default function LoginPage() {
               />
             </svg>
           }
-          onClick={googleSignIn}
+          onClick={handleGoogleSignin}
         >
           Continue with Google
         </Button>

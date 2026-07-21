@@ -93,7 +93,7 @@ export default function DashboardOverviewPage() {
       <motion.div variants={item}>
         <Card hover={false} padding="lg">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <Avatar src={user?.avatar} name={user?.name} size="lg" />
+            <Avatar src={user?.image as string | undefined} name={user?.name} size="lg" />
             <div className="flex-1 min-w-0">
               <h1 className="text-xl font-bold text-text-primary">
                 {user?.name ?? "User"}

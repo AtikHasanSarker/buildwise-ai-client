@@ -1,72 +1,28 @@
-import apiClient from "./api-client";
+import { betterAuth } from "better-auth";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { nextCookies } from "better-auth/next-js";
+import { clientPromise, getDb } from "./db";
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string | null;
-  role: "guest" | "user" | "admin";
-  createdAt: string;
-}
+const db = await getDb();
 
-export interface AuthResponse {
-  user: User;
-  token: string;
-}
-
-export interface ApiEnvelope<T> {
-  success: boolean;
-  data: T;
-  message: string;
-  error: {
-    code: string;
-    details: string;
-  } | null;
-}
-
-// Register
-export async function registerUser(payload: {
-  name: string;
-  email: string;
-  password: string;
-}) {
-  return apiClient.post<ApiEnvelope<AuthResponse>>("/auth/register", payload, {
-    withCredentials: true,
-  });
-}
-
-// Login
-export async function loginUser(payload: { email: string; password: string }) {
-  return apiClient.post<ApiEnvelope<AuthResponse>>("/auth/login", payload, {
-    withCredentials: true,
-  });
-}
-
-// Google Login
-export async function loginWithGoogle(idToken: string) {
-  return apiClient.post<ApiEnvelope<AuthResponse>>(
-    "/auth/google",
-    { idToken },
-    {
-      withCredentials: true,
-    }
-  );
-}
-
-// Logout
-export async function logoutUser() {
-  return apiClient.post<ApiEnvelope<null>>(
-    "/auth/logout",
-    {},
-    {
-      withCredentials: true,
-    }
-  );
-}
-
-// Current User
-export async function getCurrentUser() {
-  return apiClient.get<ApiEnvelope<{ user: User }>>("/auth/me", {
-    withCredentials: true,
-  });
-}
+export const auth = betterAuth({
+  database: mongodbAdapter(db, { client: await clientPromise }),
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "user",
+      },
+    },
+  },
+  emailAndPassword: {
+    enabled: true,
+  },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
+  plugins: [nextCookies()],
+});

@@ -5,7 +5,7 @@ import { motion, type HTMLMotionProps } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
 type Variant = "primary" | "secondary" | "ghost";
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "ss"| "md" | "lg";
 
 interface ButtonProps extends Omit<HTMLMotionProps<"button">, "size"> {
   variant?: Variant;
@@ -26,6 +26,7 @@ const variantStyles: Record<Variant, string> = {
 
 const sizeStyles: Record<Size, string> = {
   sm: "px-4 py-1.5 text-xs",
+  ss: "px-4 py-3 text-xs",
   md: "px-6 py-3 text-sm",
   lg: "px-8 py-3.5 text-base",
 };

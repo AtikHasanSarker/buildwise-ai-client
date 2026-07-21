@@ -386,13 +386,13 @@ export default function BuildsPage() {
           initial="hidden"
           animate="show"
           key={activeCategory}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
         >
           {filteredBuilds.map((build) => (
             <motion.div key={build._id} variants={item}>
               <Card padding="none" className="overflow-hidden flex flex-col h-full">
                 {/* Cover area */}
-                <div className="h-44 bg-gradient-to-br from-primary/8 to-purple-500/8 flex items-center justify-center relative">
+                <div className="h-44 bg-linear-to-br from-primary/8 to-purple-500/8 flex items-center justify-center relative">
                   <div className="text-center">
                     <Cpu className="w-12 h-12 text-primary/30 mx-auto mb-2" />
                     <Badge variant="ai" className="text-[10px]">
@@ -455,11 +455,11 @@ export default function BuildsPage() {
                     </div>
                     <div className="flex gap-2">
                       <Link href="/ai/build" className="flex-1">
-                        <Button size="sm" className="w-full" icon={<Sparkles className="w-3.5 h-3.5" />}>
+                        <Button size="ss" className="w-full" icon={<Sparkles className="w-4 h-4" />}>
                           Generate This Build
                         </Button>
                       </Link>
-                      <Button variant="secondary" size="sm" icon={<ArrowRight className="w-3.5 h-3.5" />}>
+                      <Button variant="secondary" size="ss" icon={<ArrowRight className="w-4 h-4" />}>
                         View Details
                       </Button>
                     </div>
@@ -473,7 +473,7 @@ export default function BuildsPage() {
 
       {/* ─── Bottom CTA ─── */}
       <div className="mt-16 text-center">
-        <div className="relative rounded-2xl p-[1px] bg-gradient-to-r from-primary via-purple-500 to-primary overflow-hidden">
+        <div className="relative rounded-2xl p-px bg-linear-to-r from-primary via-purple-500 to-primary overflow-hidden">
           <div className="rounded-2xl bg-surface p-8 md:p-12">
             <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3">
               Can&apos;t find what you need?

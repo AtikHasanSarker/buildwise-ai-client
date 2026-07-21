@@ -3,8 +3,7 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
-import { useGoogleSignIn } from "@/lib/use-google-sign-in";
+import { authClient } from "@/lib/auth-client";
 import { Button, Input } from "@/components/ui";
 import { useToast } from "@/components/ui/toast";
 
@@ -14,7 +13,7 @@ export default function RegisterPage() {
   useEffect(() => {
     document.title = "Create Account — BuildWise AI";
   }, []);
-  const { register, loginWithGoogle } = useAuth();
+
   const { showToast } = useToast();
 
   const [name, setName] = useState("");
@@ -25,24 +24,13 @@ export default function RegisterPage() {
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleGoogleCredential = async (idToken: string) => {
+  async function handleGoogleSignin() {
     setGoogleLoading(true);
-    try {
-      await loginWithGoogle(idToken);
-      showToast("success", "Signed in with Google successfully");
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : "Google sign-in failed. Try again.";
-      showToast("error", msg);
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
-
-  const { signIn: googleSignIn, loaded: googleLoaded } = useGoogleSignIn(handleGoogleCredential);
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  }
 
   function validate(): boolean {
     const errs: Record<string, string> = {};
@@ -51,7 +39,7 @@ export default function RegisterPage() {
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       errs.email = "Enter a valid email";
     if (!password) errs.password = "Password is required";
-    else if (password.length < 6) errs.password = "At least 6 characters";
+    else if (password.length < 8) errs.password = "At least 8 characters";
     if (!confirmPassword)
       errs.confirmPassword = "Please confirm your password";
     else if (password !== confirmPassword)
@@ -65,19 +53,23 @@ export default function RegisterPage() {
     if (!validate()) return;
 
     setSubmitting(true);
-    try {
-      await register(name, email, password);
-      showToast("success", "Account created successfully");
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : "Registration failed. Try again.";
-      showToast("error", msg);
-    } finally {
-      setSubmitting(false);
-    }
+    await authClient.signUp.email(
+      {
+        name,
+        email,
+        password,
+      },
+      {
+        onSuccess: () => {
+          showToast("success", "Account created successfully");
+          router.push("/dashboard");
+        },
+        onError: (ctx) => {
+          showToast("error", ctx.error.message);
+        },
+      }
+    );
+    setSubmitting(false);
   }
 
   return (
@@ -117,7 +109,7 @@ export default function RegisterPage() {
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="At least 6 characters"
+            placeholder="At least 8 characters"
             error={errors.password}
           />
 
@@ -154,7 +146,6 @@ export default function RegisterPage() {
           variant="secondary"
           className="w-full focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           loading={googleLoading}
-          disabled={!googleLoaded}
           icon={
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -175,7 +166,7 @@ export default function RegisterPage() {
               />
             </svg>
           }
-          onClick={googleSignIn}
+          onClick={handleGoogleSignin}
         >
           Continue with Google
         </Button>

@@ -54,6 +54,8 @@ interface Build {
 interface BuildsResponse {
   builds: Build[];
   total: number;
+  page: number;
+  totalPages: number;
 }
 
 interface Envelope<T> {
@@ -76,65 +78,62 @@ interface SuggestedBuild {
   category: string;
 }
 
-/* ─── Mock data: User's saved builds ─── */
+/* ─── API functions ─── */
 
-// TODO: Replace with GET /api/v1/builds
-const MOCK_BUILDS: Build[] = [
-  {
-    _id: "build-1",
-    name: "Gaming Beast RTX 4080",
-    components: [
-      { productId: "p1", category: "CPU", name: "AMD Ryzen 7 7800X3D", price: 449 },
-      { productId: "p2", category: "GPU", name: "NVIDIA RTX 4080 Super", price: 999 },
-      { productId: "p3", category: "RAM", name: "G.Skill Trident Z5 32GB DDR5", price: 129 },
-      { productId: "p4", category: "SSD", name: "Samsung 990 Pro 2TB", price: 179 },
-      { productId: "p5", category: "Motherboard", name: "ASUS ROG Strix B650E-F", price: 279 },
-      { productId: "p6", category: "PSU", name: "Corsair RM850x", price: 149 },
-      { productId: "p7", category: "Case", name: "Lian Li O11 Dynamic", price: 149 },
-      { productId: "p8", category: "Cooler", name: "NZXT Kraken X63", price: 129 },
-    ],
-    totalPrice: 2462,
-    aiRecommendation: { reason: "Best price-to-performance for 4K gaming" },
-    createdAt: "2025-07-15T10:30:00Z",
-    updatedAt: "2025-07-18T14:20:00Z",
-  },
-  {
-    _id: "build-2",
-    name: "Workstation Pro",
-    components: [
-      { productId: "p9", category: "CPU", name: "Intel Core i9-14900K", price: 549 },
-      { productId: "p10", category: "GPU", name: "NVIDIA RTX 4070 Ti Super", price: 799 },
-      { productId: "p11", category: "RAM", name: "Corsair Vengeance 64GB DDR5", price: 219 },
-      { productId: "p12", category: "SSD", name: "WD Black SN850X 4TB", price: 299 },
-      { productId: "p13", category: "Motherboard", name: "MSI MAG Z790 Tomahawk", price: 259 },
-    ],
-    totalPrice: 2125,
-    aiRecommendation: null,
-    createdAt: "2025-07-10T08:15:00Z",
-    updatedAt: "2025-07-10T08:15:00Z",
-  },
-  {
-    _id: "build-3",
-    name: "Budget Builder",
-    components: [
-      { productId: "p14", category: "CPU", name: "AMD Ryzen 5 7600", price: 199 },
-      { productId: "p15", category: "GPU", name: "AMD RX 7600", price: 269 },
-      { productId: "p16", category: "RAM", name: "Kingston Fury Beast 16GB DDR5", price: 59 },
-      { productId: "p17", category: "SSD", name: "Kingston NV2 1TB", price: 59 },
-      { productId: "p18", category: "Motherboard", name: "Gigabyte B650M DS3H", price: 129 },
-      { productId: "p19", category: "PSU", name: "EVGA 600 BQ", price: 59 },
-      { productId: "p20", category: "Case", name: "NZXT H5 Flow", price: 94 },
-    ],
-    totalPrice: 868,
-    aiRecommendation: { reason: "Best budget build for 1080p gaming" },
-    createdAt: "2025-07-05T16:45:00Z",
-    updatedAt: "2025-07-12T09:10:00Z",
-  },
-];
+async function fetchBuilds(): Promise<BuildsResponse> {
+  const res = await apiClient.get<Envelope<BuildsResponse>>("/builds?limit=50", {
+    withCredentials: true,
+  });
+  const raw = res.data.data;
+
+  // Flatten populated productId into component fields for the UI
+  const builds = raw.builds.map((build) => ({
+    ...build,
+    components: build.components.map((comp) => {
+      const populated = comp.productId as unknown as {
+        _id: string;
+        name: string;
+        images?: string[];
+        price?: number;
+        category?: string;
+        brand?: string;
+      };
+      return {
+        ...comp,
+        productId: populated?._id ?? comp.productId,
+        name: populated?.name ?? comp.name,
+        price: populated?.price ?? comp.price,
+        image: populated?.images?.[0] ?? comp.image,
+      };
+    }),
+  }));
+
+  return { ...raw, builds };
+}
+
+async function deleteBuild(id: string): Promise<void> {
+  await apiClient.delete(`/builds/${id}`, { withCredentials: true });
+}
+
+async function duplicateBuild(build: Build): Promise<Build> {
+  const res = await apiClient.post<Envelope<{ build: Build }>>(
+    "/builds",
+    {
+      name: `${build.name} (Copy)`,
+      components: build.components.map((c) => ({
+        productId: typeof c.productId === "string" ? c.productId : (c.productId as unknown as { _id: string })._id,
+        category: c.category,
+      })),
+      totalPrice: build.totalPrice,
+    },
+    { withCredentials: true }
+  );
+  return res.data.data.build;
+}
 
 /* ─── Mock data: Recommended builds ─── */
 
-// TODO: Replace with GET /api/v1/builds/recommended
+// TODO: Replace with GET /api/v1/builds/recommended when a recommendation API exists
 const MOCK_RECOMMENDED: SuggestedBuild[] = [
   {
     _id: "rec-1",
@@ -173,36 +172,6 @@ const MOCK_RECOMMENDED: SuggestedBuild[] = [
     category: "Budget",
   },
 ];
-
-async function fetchBuilds(): Promise<BuildsResponse> {
-  // TODO: Replace with GET /api/v1/builds
-  // const res = await apiClient.get("/builds?limit=50");
-  // return (res as unknown as Envelope<BuildsResponse>).data;
-  return new Promise((resolve) => setTimeout(() => resolve({ builds: MOCK_BUILDS, total: MOCK_BUILDS.length }), 600));
-}
-
-async function deleteBuild(id: string): Promise<void> {
-  // TODO: Replace with DELETE /api/v1/builds/:id
-  // await apiClient.delete(`/builds/${id}`);
-  return new Promise((resolve) => setTimeout(resolve, 300));
-}
-
-async function duplicateBuild(build: Build): Promise<Build> {
-  // TODO: Replace with POST /api/v1/builds/:id/duplicate
-  // const res = await apiClient.post(`/builds/${build._id}/duplicate`);
-  // return (res as unknown as Envelope<Build>).data;
-  return new Promise((resolve) =>
-    setTimeout(() => {
-      resolve({
-        ...build,
-        _id: `build-${Date.now()}`,
-        name: `${build.name} (Copy)`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }, 400)
-  );
-}
 
 /* ─── Category icons ─── */
 
@@ -317,6 +286,41 @@ function ComponentSummary({ components }: { components: BuildComponent[] }) {
   );
 }
 
+/* ─── Empty State ─── */
+
+function EmptyBuildsState() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col items-center justify-center py-20 text-center"
+    >
+      <div className="w-24 h-24 rounded-2xl bg-linear-to-br from-primary/10 to-purple-500/10 flex items-center justify-center mb-6">
+        <Box className="w-12 h-12 text-primary/50" />
+      </div>
+      <h2 className="text-xl font-semibold text-text-primary mb-2">
+        No Saved Builds Yet
+      </h2>
+      <p className="text-sm text-text-secondary max-w-md mb-8 leading-relaxed">
+        You haven&apos;t created any PC builds yet. Start by exploring our
+        suggested builds or generate your own AI-powered build.
+      </p>
+      <div className="flex flex-wrap gap-3 justify-center">
+        <Link href="/products">
+          <Button variant="secondary" icon={<Package className="w-4 h-4" />}>
+            Browse Suggested Builds
+          </Button>
+        </Link>
+        <Link href="/ai/build">
+          <Button icon={<Sparkles className="w-4 h-4" />}>
+            Generate AI Build
+          </Button>
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
+
 /* ─── Main Page ─── */
 
 export default function MyBuildsPage() {
@@ -380,6 +384,7 @@ export default function MyBuildsPage() {
       queryClient.setQueryData<BuildsResponse>(["builds"], (old) => {
         if (!old) return old;
         return {
+          ...old,
           builds: [newBuild, ...old.builds],
           total: old.total + 1,
         };
@@ -425,6 +430,8 @@ export default function MyBuildsPage() {
 
     return sorted;
   }, [data?.builds, search, sort]);
+
+  const hasBuilds = (data?.builds?.length ?? 0) > 0;
 
   /* ─── Handlers ─── */
 
@@ -509,9 +516,9 @@ export default function MyBuildsPage() {
     );
   }
 
-  /* ─── Empty state ─── */
+  /* ─── Empty state (no builds at all, no search active) ─── */
 
-  if (builds.length === 0 && !search) {
+  if (!hasBuilds && !search) {
     return (
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-10">
         <div className="mb-8">
@@ -520,35 +527,10 @@ export default function MyBuildsPage() {
             View, manage and continue working on your saved PC builds.
           </p>
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center py-24 text-center"
-        >
-          <div className="w-24 h-24 rounded-2xl bg-surface-2 flex items-center justify-center mb-6">
-            <Box className="w-12 h-12 text-text-secondary" />
-          </div>
-          <h2 className="text-xl font-semibold text-text-primary mb-2">
-            No Saved Builds Yet
-          </h2>
-          <p className="text-sm text-text-secondary max-w-sm mb-8">
-            Generate your first AI-powered PC build and save it for later.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/products">
-              <Button variant="secondary" icon={<Package className="w-4 h-4" />}>
-                Browse Components
-              </Button>
-            </Link>
-            <Link href="/ai/build">
-              <Button icon={<Sparkles className="w-4 h-4" />}>
-                Generate AI Build
-              </Button>
-            </Link>
-          </div>
-        </motion.div>
 
-        {/* Recommended section even when empty */}
+        <EmptyBuildsState />
+
+        {/* Recommended section always visible */}
         <RecommendedSection />
       </div>
     );
@@ -715,7 +697,7 @@ export default function MyBuildsPage() {
                   <div className="flex border-t border-border">
                     <button
                       onClick={() => openDetail(build)}
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px]"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
                       aria-label={`View details for ${build.name}`}
                     >
                       <Eye className="w-3.5 h-3.5" />
@@ -724,7 +706,7 @@ export default function MyBuildsPage() {
                     <div className="w-px bg-border" />
                     <Link
                       href="/builds/current"
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-medium text-primary hover:bg-primary/5 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px]"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-medium text-primary hover:bg-primary/5 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
                       aria-label={`Continue building ${build.name}`}
                     >
                       <Play className="w-3.5 h-3.5" />
@@ -734,7 +716,7 @@ export default function MyBuildsPage() {
                     <button
                       onClick={() => duplicateMutation.mutate(build)}
                       disabled={duplicateMutation.isPending}
-                      className="flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-medium text-text-secondary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px] disabled:opacity-50"
+                      className="flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-medium text-text-secondary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2 disabled:opacity-50"
                       aria-label={`Duplicate ${build.name}`}
                     >
                       <Copy className="w-3.5 h-3.5" />
@@ -742,7 +724,7 @@ export default function MyBuildsPage() {
                     <div className="w-px bg-border" />
                     <button
                       onClick={() => openConfirm(build)}
-                      className="flex items-center justify-center px-3 py-3 text-xs font-medium text-error hover:bg-error/5 transition-colors focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-[-2px]"
+                      className="flex items-center justify-center px-3 py-3 text-xs font-medium text-error hover:bg-error/5 transition-colors focus-visible:outline-2 focus-visible:outline-error focus-visible:-outline-offset-2"
                       aria-label={`Delete ${build.name}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -769,7 +751,7 @@ export default function MyBuildsPage() {
           <div className="space-y-4">
             {/* AI badge */}
             {selectedBuild.aiRecommendation && (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-linear-to-r from-primary/10 to-purple-500/10 border border-primary/20">
                 <Sparkles className="w-4 h-4 text-primary shrink-0" />
                 <span className="text-sm font-medium text-primary">
                   This build was AI-recommended
@@ -900,7 +882,7 @@ export default function MyBuildsPage() {
               size="sm"
               loading={deleteMutation.isPending}
               onClick={confirmDelete}
-              className="!bg-error hover:!bg-error/90 !shadow-none"
+              className="bg-error! hover:bg-error/90! shadow-none!"
             >
               Delete
             </Button>
@@ -913,6 +895,7 @@ export default function MyBuildsPage() {
 
 /* ─── Recommended Section ─── */
 
+// TODO: Replace MOCK_RECOMMENDED with GET /api/v1/builds/recommended when available
 function RecommendedSection() {
   return (
     <div className="mt-16">
@@ -929,7 +912,7 @@ function RecommendedSection() {
         {MOCK_RECOMMENDED.map((build) => (
           <Card key={build._id} padding="none" className="overflow-hidden flex flex-col">
             {/* Cover area */}
-            <div className="h-40 bg-gradient-to-br from-primary/10 to-purple-500/10 flex items-center justify-center relative">
+            <div className="h-40 bg-linear-to-br from-primary/10 to-purple-500/10 flex items-center justify-center relative">
               <div className="text-center">
                 <Cpu className="w-10 h-10 text-primary/40 mx-auto mb-2" />
                 <Badge variant="ai" className="text-[10px]">{build.performanceBadge}</Badge>

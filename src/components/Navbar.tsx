@@ -19,6 +19,7 @@ import {
   Cog,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { authClient } from "@/lib/auth-client";
 import { useBuild } from "@/lib/build-context";
 import { useToast } from "@/components/ui/toast";
 import { useCurrentTheme } from "@/lib/useCurrentTheme";
@@ -56,7 +57,7 @@ function isActive(pathname: string, href: string) {
 export default function Navbar() {
   const theme = useCurrentTheme();
   const pathname = usePathname();
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading } = useAuth();
   const { itemCount } = useBuild();
   const { showToast } = useToast();
   const router = useRouter();
@@ -108,7 +109,7 @@ export default function Navbar() {
 
   async function handleLogout() {
     try {
-      await logout();
+      await authClient.signOut();
       showToast("success", "Logged out");
       setDropdownOpen(false);
       router.push("/");
@@ -194,18 +195,20 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-2">
           {/* Current Build badge */}
-          <Link
-            href="/my-builds"
-            className="relative flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
-          >
-            <Cpu className="w-4 h-4" />
-            <span className="hidden sm:inline">Build</span>
-            {itemCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center px-1">
-                {itemCount}
-              </span>
-            )}
-          </Link>
+          {user && (
+            <Link
+              href="/builds/current"
+              className="relative flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+            >
+              <Cpu className="w-4 h-4" />
+              <span className="hidden sm:inline">Build</span>
+              {itemCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-4.5 h-4.5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center px-1">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+          )}
           <ThemeToggle />
           {isLoading ? (
             <div className="w-8 h-8 rounded-full bg-surface-2 animate-pulse" />
@@ -215,9 +218,9 @@ export default function Navbar() {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2 rounded-full border border-border px-2 py-1 hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
-                {user.avatar ? (
+                {user.image ? (
                   <img
-                    src={user.avatar}
+                    src={user.image as string}
                     alt={user.name}
                     className="w-7 h-7 rounded-full object-cover"
                   />

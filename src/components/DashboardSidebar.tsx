@@ -122,7 +122,7 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
       <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-surface border-r border-border h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto">
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-3">
-            <Avatar src={user?.avatar} name={user?.name} size="md" />
+            <Avatar src={user?.image as string | undefined} name={user?.name} size="md" />
             <div className="min-w-0">
               <p className="text-sm font-semibold text-text-primary truncate">
                 {user?.name}
@@ -156,7 +156,7 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
             >
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <div className="flex items-center gap-3">
-                  <Avatar src={user?.avatar} name={user?.name} size="md" />
+                  <Avatar src={user?.image as string | undefined} name={user?.name} size="md" />
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-text-primary truncate">
                       {user?.name}
