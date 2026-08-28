@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Variants } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { motion, useInView, useMotionValue, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import {
   Cpu,
   ShieldCheck,
@@ -17,9 +17,6 @@ import {
   Users,
   Bot,
   Zap,
-  HardDrive,
-  MemoryStick,
-  CircuitBoard,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -27,6 +24,7 @@ import { Card } from "@/components/ui";
 import { ProductCardSkeleton } from "@/components/ui/Skeleton";
 import { ProductCard } from "@/components/products/ProductCard";
 import { getProducts, type Product } from "@/lib/products";
+import Image from "next/image";
 
 /* ─── Scroll-reveal wrapper (A.6) ─── */
 
@@ -115,13 +113,6 @@ const stats = [
   { value: 5000, suffix: "+", label: "Happy Users", icon: Users },
 ];
 
-const componentIcons = [
-  { icon: Cpu, label: "CPU", rotation: "-4deg", animation: "hero-float-1", duration: "5s", delay: "0s", z: 20 },
-  { icon: CircuitBoard, label: "GPU", rotation: "3deg", animation: "hero-float-2", duration: "6s", delay: "0.3s", z: 30 },
-  { icon: MemoryStick, label: "RAM", rotation: "-2deg", animation: "hero-float-3", duration: "5.5s", delay: "0.6s", z: 10 },
-  { icon: HardDrive, label: "Storage", rotation: "5deg", animation: "hero-float-4", duration: "6.5s", delay: "0.9s", z: 25 },
-];
-
 /* ─── Fetch products ─── */
 
 function useFeaturedProducts() {
@@ -134,92 +125,6 @@ function useFeaturedProducts() {
     staleTime: 5 * 60 * 1000,
     retry: false,
   });
-}
-
-/* ─── Hero floating visual with mouse tracking ─── */
-
-function HeroVisual() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [6, -6]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-6, 6]);
-
-  function handleMouseMove(e: React.MouseEvent) {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-  }
-
-  function handleMouseLeave() {
-    mouseX.set(0);
-    mouseY.set(0);
-  }
-
-  return (
-    <motion.div
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-      className="relative w-full max-w-lg mx-auto lg:mx-0 aspect-square"
-      style={{ perspective: 800 }}
-    >
-      {/* Glow behind the composition */}
-      <div className="absolute inset-0 -m-8 rounded-full bg-linear-to-br from-primary/25 via-purple-500/20 to-primary/10 blur-3xl opacity-60 dark:opacity-80" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-accent/10 blur-3xl opacity-40" />
-
-      {/* 3D tilted card stack */}
-      <motion.div
-        className="relative w-full h-full"
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      >
-        {componentIcons.map((comp) => (
-          <motion.div
-            key={comp.label}
-            className="absolute top-1/2 left-1/2"
-            style={{
-              zIndex: comp.z,
-              animation: `${comp.animation} ${comp.duration} ease-in-out ${comp.delay} infinite`,
-            }}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 + comp.z / 100 }}
-          >
-            <div
-              className="relative bg-surface/90 backdrop-blur-xl border border-border/50 rounded-2xl shadow-elevated p-5 sm:p-6 flex flex-col items-center gap-2.5 select-none"
-              style={{ transform: `translate(-50%, -50%) rotate(${comp.rotation})` }}
-            >
-              <comp.icon
-                className="w-8 h-8 sm:w-10 sm:h-10 text-primary"
-                strokeWidth={1.5}
-              />
-              <span className="text-xs font-medium text-text-secondary tracking-wide uppercase">
-                {comp.label}
-              </span>
-            </div>
-          </motion.div>
-        ))}
-
-        {/* Central badge */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 z-50"
-          style={{ transform: "translate(-50%, -50%)" }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.8, type: "spring", stiffness: 200 }}
-        >
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-primary to-purple-600 flex items-center justify-center shadow-glow-primary">
-            <Zap className="w-7 h-7 sm:w-9 sm:h-9 text-white" strokeWidth={2} />
-          </div>
-        </motion.div>
-      </motion.div>
-    </motion.div>
-  );
 }
 
 /* ─── Premium Hero section ─── */
@@ -245,11 +150,11 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+    <section className="relative flex items-center overflow-hidden">
       {/* Spotlight glow behind heading */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-125 h-125 rounded-full bg-primary/8 dark:bg-primary/15 blur-[100px] pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-24 md:py-32">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text + CTAs */}
           <motion.div
@@ -326,9 +231,9 @@ function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* Right: Floating PC component visual */}
+          {/* Right: Floating PC component collage */}
           <div className="hidden lg:flex justify-center items-center">
-            <HeroVisual />
+            <Image src="/images/pc.jpg" alt="Hero collage" width={1200} height={630} className="rounded-xl shadow-elevated" />
           </div>
         </div>
       </div>
