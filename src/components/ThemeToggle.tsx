@@ -40,7 +40,7 @@ export default function ThemeToggle() {
     <motion.button
       whileTap={{ scale: 0.9 }}
       onClick={toggle}
-      className="p-2 rounded-full text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+      className="p-2 cursor-pointer rounded-full text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {dark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}

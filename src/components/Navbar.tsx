@@ -13,7 +13,6 @@ import {
   Cpu,
   Home,
   Package,
-  Wrench,
   FolderOpen,
   Sparkles,
   Cog,
@@ -265,7 +264,7 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
               <Link
                 href="/login"
                 className="rounded-full border border-border bg-surface px-5 py-2 text-sm font-medium text-text-primary transition-all hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
@@ -284,7 +283,7 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden text-text-primary p-1 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
+            className="md:hidden cursor-pointer text-text-primary p-1 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? (
@@ -300,6 +299,18 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-surface px-4 py-4 flex flex-col gap-1">
           {visibleNavItems.map((item) => renderNavLink(item, true))}
+          <Link
+            href="/login"
+            className="rounded-full my-4 border border-border bg-surface px-5 py-2 text-sm font-medium text-text-primary transition-all hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+          >
+            Login
+          </Link>
+          <Link
+            href="/register"
+            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-soft transition-all hover:bg-primary-hover hover:shadow-glow-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+          >
+            Register
+          </Link>
         </div>
       )}
     </nav>
